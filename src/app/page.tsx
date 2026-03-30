@@ -10,10 +10,32 @@ const CATEGORY_EMOJI: Record<string, string> = {
   社会: "👫",
 };
 
+// カード色：工作用紙っぽいカラフルな色
+const CARD_COLORS = [
+  "bg-yellow-100",
+  "bg-pink-100",
+  "bg-blue-100",
+  "bg-green-100",
+  "bg-orange-100",
+  "bg-purple-100",
+  "bg-red-100",
+  "bg-teal-100",
+  "bg-lime-100",
+  "bg-rose-100",
+  "bg-sky-100",
+  "bg-amber-100",
+];
+
+const ROTATIONS = [
+  "-rotate-1", "rotate-1", "-rotate-2", "rotate-2",
+  "-rotate-1", "rotate-0", "rotate-1", "-rotate-2",
+  "rotate-2", "-rotate-1", "rotate-1", "-rotate-2",
+];
+
 export default async function Home() {
   const articles = await prisma.article.findMany({
     orderBy: { publishedAt: "desc" },
-    take: 13,
+    take: 12,
     select: {
       id: true,
       titleKids: true,
@@ -27,100 +49,74 @@ export default async function Home() {
     year: "numeric",
     month: "long",
     day: "numeric",
-    weekday: "long",
   });
 
-  const top = articles[0];
-  const second = articles.slice(1, 3);
-  const rest = articles.slice(3);
-
   return (
-    <div className="min-h-screen bg-[#f5f0e8]" style={{ fontFamily: "'Hiragino Maru Gothic ProN', 'BIZ UDPGothic', sans-serif" }}>
+    <div className="min-h-screen cork-bg">
 
-      {/* 題字エリア */}
-      <header className="border-b-4 border-black bg-white px-4 pt-4 pb-2">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-end justify-between border-b-2 border-black pb-2 mb-1">
-            <div className="text-xs text-gray-500">{today}</div>
-            <div className="text-xs text-gray-500">第1号</div>
-          </div>
-          <h1 className="text-center py-2" style={{ fontSize: "clamp(2.5rem, 8vw, 4.5rem)", fontWeight: 900, letterSpacing: "0.2em", lineHeight: 1 }}>
+      {/* ヘッダー：黒板風の帯 */}
+      <header className="relative py-5 px-4" style={{ background: "linear-gradient(135deg, #2d5a27 0%, #3a7a32 50%, #2d5a27 100%)" }}>
+        {/* チョークっぽいライン */}
+        <div className="absolute top-2 left-0 right-0 h-px opacity-30" style={{ background: "repeating-linear-gradient(90deg, white 0px, white 30px, transparent 30px, transparent 40px)" }} />
+        <div className="absolute bottom-2 left-0 right-0 h-px opacity-30" style={{ background: "repeating-linear-gradient(90deg, white 0px, white 20px, transparent 20px, transparent 30px)" }} />
+
+        <div className="max-w-4xl mx-auto text-center">
+          {/* クレヨン風タイトル */}
+          <h1 className="font-crayon text-white drop-shadow-lg" style={{ fontSize: "clamp(2.8rem, 9vw, 5rem)", textShadow: "3px 3px 0px rgba(0,0,0,0.3), -1px -1px 0px rgba(255,255,255,0.1)" }}>
             ちびっこ新聞
           </h1>
-          <div className="text-center text-sm font-bold text-gray-600 border-t-2 border-black pt-1">
-            むずかしいニュースを　よっつにおる
+          <div className="text-green-200 text-sm font-crayon mt-1 opacity-80">
+            むずかしいニュースを　かんたんに！
           </div>
+          <div className="text-green-300 text-xs mt-1 opacity-60">{today}</div>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-3 py-4">
+      {/* 掲示板エリア */}
+      <main className="max-w-5xl mx-auto px-4 py-8">
         {articles.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-6xl">📰</p>
-            <p className="text-xl font-bold text-gray-500 mt-4">いまニュースをよみにいってるよ！</p>
+            <div className="bg-white rounded-lg p-8 inline-block shadow-lg">
+              <p className="text-6xl">📰</p>
+              <p className="text-xl font-bold text-gray-500 mt-4 font-crayon">いまニュースをよみにいってるよ！</p>
+            </div>
           </div>
         ) : (
-          <>
-            {/* 1面トップ */}
-            {top && (
-              <div className="border-b-2 border-black mb-4 pb-4">
-                <Link href={`/articles/${top.id}`}>
-                  <div className="hover:opacity-80 transition-opacity">
-                    <div className="text-xs font-black mb-1">
-                      {CATEGORY_EMOJI[top.category] || "📰"} {top.category}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
+            {articles.map((article, i) => {
+              const color = CARD_COLORS[i % CARD_COLORS.length];
+              const rotate = ROTATIONS[i % ROTATIONS.length];
+              const emoji = CATEGORY_EMOJI[article.category] || "📰";
+
+              return (
+                <Link key={article.id} href={`/articles/${article.id}`} className="relative block">
+                  {/* 画鋲 */}
+                  <div className="absolute top-2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-4 h-4 rounded-full border-2 border-gray-400 shadow-sm"
+                    style={{ background: "radial-gradient(circle at 35% 35%, #ff6b6b, #cc2200)" }} />
+
+                  <div className={`card-pinned ${color} ${rotate} rounded-sm p-4 pt-5 relative`}>
+                    <div className="text-xs text-gray-500 mb-2 font-bold">
+                      {emoji} {article.category}
                     </div>
-                    <h2 className="font-black leading-tight mb-2" style={{ fontSize: "clamp(1.6rem, 5vw, 2.4rem)" }}>
-                      {top.titleKids}
+                    <h2 className="font-black text-gray-800 leading-snug mb-2 text-sm md:text-base">
+                      {article.titleKids}
                     </h2>
-                    <p className="text-base leading-relaxed text-gray-700">
-                      {top.bodyKids}
+                    <p className="text-xs text-gray-600 leading-relaxed line-clamp-3">
+                      {article.bodyKids}
                     </p>
-                    <p className="text-xs text-gray-400 mt-2 text-right">つづきをよむ →</p>
+                    <p className="text-xs text-gray-400 mt-3 text-right font-bold">
+                      よむ →
+                    </p>
                   </div>
                 </Link>
-              </div>
-            )}
-
-            {/* 2・3番目：横並び */}
-            {second.length > 0 && (
-              <div className="grid grid-cols-2 gap-4 border-b-2 border-black mb-4 pb-4">
-                {second.map((article) => (
-                  <Link key={article.id} href={`/articles/${article.id}`}>
-                    <div className="hover:opacity-80 transition-opacity">
-                      <div className="text-xs font-black mb-1">
-                        {CATEGORY_EMOJI[article.category] || "📰"} {article.category}
-                      </div>
-                      <h3 className="text-lg font-black leading-snug mb-2">{article.titleKids}</h3>
-                      <p className="text-sm text-gray-700 leading-relaxed line-clamp-3">{article.bodyKids}</p>
-                      <p className="text-xs text-gray-400 mt-1 text-right">つづきをよむ →</p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-
-            {/* 残り：小さいカード */}
-            {rest.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-4">
-                {rest.map((article, i) => (
-                  <Link key={article.id} href={`/articles/${article.id}`}>
-                    <div className={`hover:opacity-80 transition-opacity ${i < rest.length - 1 ? "border-b border-gray-300 pb-4" : ""}`}>
-                      <div className="text-xs text-gray-500 mb-1">
-                        {CATEGORY_EMOJI[article.category] || "📰"} {article.category}
-                      </div>
-                      <h3 className="text-sm font-black leading-snug mb-1">{article.titleKids}</h3>
-                      <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed">{article.bodyKids}</p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </>
+              );
+            })}
+          </div>
         )}
       </main>
 
-      <footer className="border-t-2 border-black text-center py-4 mt-8 text-xs text-gray-500 bg-white">
-        © 2026 ちびっこ新聞 ｜ むずかしいニュースをよっつにおる
+      <footer className="text-center py-6 text-xs text-amber-900 opacity-70 font-crayon">
+        © 2026 ちびっこ新聞
       </footer>
     </div>
   );

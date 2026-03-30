@@ -1,12 +1,32 @@
 @import "tailwindcss";
 
-:root {
-  --background: #fffef0;
-  --foreground: #333333;
+body {
+  font-family: "Hiragino Maru Gothic ProN", "BIZ UDPGothic", "Meiryo", sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: "Hiragino Maru Gothic ProN", "Hiragino Maru Gothic Pro", "BIZ UDPGothic", "Meiryo", sans-serif;
+.font-crayon {
+  font-family: var(--font-yomogi), "Hiragino Maru Gothic ProN", sans-serif;
+}
+
+/* コルクボード風背景 */
+.cork-bg {
+  background-color: #c8954a;
+  background-image:
+    radial-gradient(ellipse at 20% 30%, rgba(180,120,50,0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(160,100,30,0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(200,150,70,0.2) 0%, transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Ccircle cx='1' cy='1' r='0.5' fill='rgba(100,60,10,0.15)'/%3E%3Ccircle cx='3' cy='3' r='0.4' fill='rgba(100,60,10,0.1)'/%3E%3C/svg%3E");
+}
+
+/* 画鋲のシャドウ */
+.card-pinned {
+  box-shadow: 2px 3px 8px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  transform: rotate(var(--rotate, 0deg));
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-pinned:hover {
+  box-shadow: 4px 6px 16px rgba(0,0,0,0.35);
+  transform: rotate(0deg) scale(1.02);
+  z-index: 10;
 }

@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
+import { Yomogi } from "next/font/google";
 import "./globals.css";
+
+const yomogi = Yomogi({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-yomogi",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "ちびっこ新聞 🗞️ むずかしいニュースをかんたんに！",
@@ -12,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className="h-full">
-      <body className="min-h-full flex flex-col bg-[#fffef0]">{children}</body>
+    <html lang="ja" className={`h-full ${yomogi.variable}`}>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }
