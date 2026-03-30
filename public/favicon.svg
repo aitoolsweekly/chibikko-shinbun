@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- 鉛筆本体 -->
+  <rect x="10" y="4" width="10" height="20" rx="2" fill="#4ade80" transform="rotate(15 16 16)"/>
+  <!-- 鉛筆の先端（木の部分） -->
+  <polygon points="16,26 12,30 20,30" fill="#d97706" transform="rotate(15 16 16)"/>
+  <!-- 鉛筆の芯 -->
+  <polygon points="16,28 14.5,30 17.5,30" fill="#1f2937" transform="rotate(15 16 16)"/>
+  <!-- 消しゴム部分 -->
+  <rect x="10" y="2" width="10" height="4" rx="1" fill="#f9a8d4" transform="rotate(15 16 16)"/>
+  <!-- 消しゴムの金具 -->
+  <rect x="10" y="5" width="10" height="2" fill="#d1d5db" transform="rotate(15 16 16)"/>
+</svg>

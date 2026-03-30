@@ -13,6 +13,9 @@ const yomogi = Yomogi({
 export const metadata: Metadata = {
   title: "ちびっこ新聞 🗞️ むずかしいニュースをかんたんに！",
   description: "世界のむずかしいニュースを幼稚園児でもわかるように翻訳するメディアです。",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
