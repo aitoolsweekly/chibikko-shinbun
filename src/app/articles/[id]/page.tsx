@@ -1,8 +1,35 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+const SITE_URL = "https://chibikko-shinbun.vercel.app";
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const article = await prisma.article.findUnique({ where: { id } });
+  if (!article) return {};
+
+  const url = `${SITE_URL}/articles/${id}`;
+  return {
+    title: `${article.titleKids} | ちびっこ新聞`,
+    description: article.bodyKids.slice(0, 120),
+    openGraph: {
+      title: article.titleKids,
+      description: article.bodyKids.slice(0, 120),
+      url,
+      siteName: "ちびっこ新聞",
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: article.titleKids,
+      description: article.bodyKids.slice(0, 120),
+    },
+  };
+}
 
 export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -10,14 +37,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
   if (!article) notFound();
 
   const date = new Date(article.publishedAt).toLocaleDateString("ja-JP", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+    year: "numeric", month: "long", day: "numeric",
   });
+
+  const articleUrl = `${SITE_URL}/articles/${id}`;
+  const xShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(article.titleKids + "\n\nちびっこ新聞で読む👇")}&url=${encodeURIComponent(articleUrl)}&hashtags=ちびっこ新聞`;
+  const lineShareUrl = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(articleUrl)}`;
 
   return (
     <div className="min-h-screen cork-bg">
-      {/* ヘッダー */}
       <header className="relative py-4 px-4" style={{ background: "linear-gradient(135deg, #2d5a27 0%, #3a7a32 50%, #2d5a27 100%)" }}>
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <Link href="/" className="font-crayon text-white text-lg hover:opacity-70 transition-opacity" style={{ textShadow: "1px 1px 0px rgba(0,0,0,0.3)" }}>
@@ -28,7 +56,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-8">
-        {/* 画鋲つきカード */}
         <div className="relative">
           <div className="absolute top-2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-5 h-5 rounded-full border-2 border-gray-400 shadow"
             style={{ background: "radial-gradient(circle at 35% 35%, #ff6b6b, #cc2200)" }} />
@@ -43,6 +70,28 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
             <p className="text-base leading-loose text-gray-700 whitespace-pre-wrap mb-8">
               {article.bodyKids}
             </p>
+
+            {/* シェアボタン */}
+            <div className="flex gap-3 mb-6">
+              <a
+                href={xShareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 rounded-full font-bold text-sm text-white transition-opacity hover:opacity-80"
+                style={{ background: "#000000" }}
+              >
+                <span>𝕏</span> ポストする
+              </a>
+              <a
+                href={lineShareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 rounded-full font-bold text-sm text-white transition-opacity hover:opacity-80"
+                style={{ background: "#06C755" }}
+              >
+                <span>LINE</span> でシェア
+              </a>
+            </div>
 
             {/* 元記事 */}
             <div className="bg-gray-50 rounded p-4 border border-gray-200">
