@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Yomogi } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const yomogi = Yomogi({
@@ -19,8 +20,20 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_ID;
+
   return (
     <html lang="ja" className={`h-full ${yomogi.variable}`}>
+      <head>
+        {adsenseId && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseId}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

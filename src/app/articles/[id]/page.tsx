@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
 import { postComment } from "./actions";
+import AdSense from "@/components/AdSense";
 
 export const dynamic = "force-dynamic";
 
@@ -105,6 +106,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
           </div>
         </div>
 
+        {/* 広告（記事とコメントの間） */}
+        <AdSense slot="1234567890" format="auto" />
+
         {/* コメント欄 */}
         <div className="mt-8 relative">
           <div className="absolute top-2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-4 h-4 rounded-full border-2 border-gray-400 shadow-sm"
@@ -156,7 +160,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
       </main>
 
       <footer className="text-center py-6 text-xs text-amber-900 opacity-70 font-crayon">
-        © 2026 ちびっこ新聞
+        © 2026 ちびっこ新聞 ｜{" "}
+        <Link href="/privacy" className="underline hover:opacity-70">プライバシーポリシー</Link>
       </footer>
     </div>
   );

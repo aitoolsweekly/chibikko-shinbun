@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import AdSense from "@/components/AdSense";
 
 export const dynamic = "force-dynamic";
 
@@ -200,8 +201,14 @@ export default async function Home({
         )}
       </main>
 
-      <footer className="text-center py-6 text-xs text-amber-900 opacity-70 font-crayon">
-        © 2026 ちびっこ新聞
+      {/* フッター広告 */}
+      <div className="max-w-5xl mx-auto px-4 pb-4">
+        <AdSense slot="0987654321" format="horizontal" />
+      </div>
+
+      <footer className="text-center py-4 text-xs text-amber-900 opacity-70 font-crayon">
+        © 2026 ちびっこ新聞 ｜{" "}
+        <Link href="/privacy" className="underline hover:opacity-70">プライバシーポリシー</Link>
       </footer>
     </div>
   );
