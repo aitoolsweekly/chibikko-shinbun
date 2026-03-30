@@ -7,16 +7,27 @@ datasource db {
 }
 
 model Article {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
   titleKids   String
   body        String
   bodyKids    String
   sourceUrl   String
   sourceTitle String
-  category    String   @default("経済")
-  publishedAt DateTime @default(now())
-  createdAt   DateTime @default(now())
+  category    String    @default("経済")
+  publishedAt DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+  comments    Comment[]
 
   @@index([publishedAt])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  articleId String
+  body      String
+  createdAt DateTime @default(now())
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([articleId])
 }
