@@ -25,6 +25,7 @@ export default function RootLayout({
   return (
     <html lang="ja" className={`h-full ${yomogi.variable}`}>
       <head>
+        <meta name="google-adsense-account" content="ca-pub-5313624085381885" />
         {adsenseId && (
           <Script
             async
