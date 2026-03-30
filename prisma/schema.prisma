@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Article {
+  id          String   @id @default(cuid())
+  title       String
+  titleKids   String
+  body        String
+  bodyKids    String
+  sourceUrl   String
+  sourceTitle String
+  category    String   @default("経済")
+  publishedAt DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  @@index([publishedAt])
+}

@@ -1,0 +1,6 @@
+[deploy]
+startCommand = "npm run scheduler"
+restartPolicyType = "never"
+
+[cron]
+schedule = "0 6 * * *"
