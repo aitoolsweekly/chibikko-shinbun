@@ -59,6 +59,10 @@ function isToday(date: Date): boolean {
   return toJSTDateKey(date) === toJSTDateKey(new Date());
 }
 
+function stripRuby(text: string): string {
+  return text.replace(/\{([^|{}]+)\|[^|{}]+\}/g, "$1");
+}
+
 export default async function Home({
   searchParams,
 }: {
@@ -151,7 +155,7 @@ export default async function Home({
         <div className="bg-red-600 text-white py-2 px-4 text-center font-black text-sm md:text-base animate-pulse sticky top-0 z-50">
           <Link href={`/articles/${breakingArticle.id}`} className="flex items-center justify-center gap-2 hover:underline">
             <span className="bg-white text-red-600 font-black px-2 py-0.5 rounded text-xs">号外！</span>
-            <span>{breakingArticle.titleKids}</span>
+            <span>{stripRuby(breakingArticle.titleKids)}</span>
           </Link>
         </div>
       )}
@@ -271,10 +275,10 @@ export default async function Home({
                         {CATEGORY_EMOJI[pickup.category] ?? "📰"} {pickup.category}
                       </div>
                       <h2 className="font-black text-gray-800 leading-snug mb-3 text-xl md:text-2xl">
-                        {pickup.titleKids}
+                        {stripRuby(pickup.titleKids)}
                       </h2>
                       <p className="text-sm text-gray-600 leading-relaxed line-clamp-4">
-                        {pickup.bodyKids}
+                        {stripRuby(pickup.bodyKids)}
                       </p>
                       <div className="flex items-center justify-between mt-4">
                         <span className="text-xs text-gray-400">{getDateLabel(pickup.publishedAt)}</span>
@@ -308,7 +312,7 @@ export default async function Home({
                             <span className={`font-black text-sm min-w-5 ${i === 0 ? "text-yellow-500" : i === 1 ? "text-gray-400" : i === 2 ? "text-amber-600" : "text-gray-400"}`}>
                               {i + 1}
                             </span>
-                            <span className="text-xs text-gray-700 leading-snug font-bold line-clamp-2">{a.titleKids}</span>
+                            <span className="text-xs text-gray-700 leading-snug font-bold line-clamp-2">{stripRuby(a.titleKids)}</span>
                             <span className="text-xs text-gray-400 ml-auto whitespace-nowrap">👀{a.viewCount}</span>
                           </Link>
                         </li>
@@ -352,10 +356,10 @@ export default async function Home({
                               {emoji} {article.category}
                             </div>
                             <h2 className="font-black text-gray-800 leading-snug mb-2 text-base md:text-lg">
-                              {article.titleKids}
+                              {stripRuby(article.titleKids)}
                             </h2>
                             <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
-                              {article.bodyKids}
+                              {stripRuby(article.bodyKids)}
                             </p>
                             <div className="flex items-center justify-between mt-3">
                               <span className="text-sm text-gray-400">{getDateLabel(article.publishedAt)}</span>
@@ -395,7 +399,7 @@ export default async function Home({
                       <span className={`font-black text-sm min-w-4 shrink-0 ${i === 0 ? "text-yellow-500" : i === 1 ? "text-gray-400" : i === 2 ? "text-amber-600" : "text-gray-400"}`}>
                         {i + 1}
                       </span>
-                      <span className="text-xs text-gray-700 leading-snug font-bold line-clamp-2">{a.titleKids}</span>
+                      <span className="text-xs text-gray-700 leading-snug font-bold line-clamp-2">{stripRuby(a.titleKids)}</span>
                     </Link>
                   </li>
                 ))}
