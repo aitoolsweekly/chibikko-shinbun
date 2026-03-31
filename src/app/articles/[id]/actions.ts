@@ -13,3 +13,11 @@ export async function postComment(articleId: string, formData: FormData) {
 
   revalidatePath(`/articles/${articleId}`);
 }
+
+const VALID_TYPES = ["like", "laugh", "wow", "sad", "love"];
+
+export async function addReaction(commentId: string, type: string, articleId: string) {
+  if (!VALID_TYPES.includes(type)) return;
+  await prisma.commentReaction.create({ data: { commentId, type } });
+  revalidatePath(`/articles/${articleId}`);
+}

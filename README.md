@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ちびっこ新聞
 
-## Getting Started
+難しいニュースを幼稚園児向けにAIが翻訳するニュースサイト。
 
-First, run the development server:
+**本番URL:** https://chibikko-shinbun.vercel.app
+
+## 技術スタック
+
+- **フロント/バックエンド:** Next.js (App Router)
+- **DB:** NeonDB (PostgreSQL) + Prisma
+- **AI翻訳:** Anthropic Claude
+- **デプロイ:** Vercel
+- **収益化:** Google AdSense
+
+## ローカル開発環境のセットアップ
+
+### 1. リポジトリをクローン
+
+```bash
+git clone https://github.com/aitoolsweekly/chibikko-shinbun.git
+cd chibikko-shinbun
+```
+
+### 2. 依存パッケージをインストール
+
+```bash
+npm install
+```
+
+### 3. 環境変数を設定
+
+```bash
+cp .env.example .env
+```
+
+`.env` を編集して以下を設定：
+
+| 変数名 | 内容 |
+|--------|------|
+| `DATABASE_URL` | NeonDB の接続文字列（`?pgbouncer=true` 付き） |
+| `ANTHROPIC_API_KEY` | Anthropic API キー |
+| `CRON_SECRET` | Cron エンドポイント保護用の任意の文字列 |
+
+### 4. DBマイグレーション
+
+```bash
+npx prisma migrate deploy
+```
+
+### 5. 開発サーバー起動
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[http://localhost:3000](http://localhost:3000) で確認。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 主要ファイル
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| ファイル | 役割 |
+|----------|------|
+| `src/app/page.tsx` | トップページ（コルクボード、フィルター） |
+| `src/app/articles/[id]/page.tsx` | 記事詳細 |
+| `src/app/api/cron/route.ts` | Cron（毎日朝6時JST） |
+| `src/lib/agent.ts` | RSS取得 → Claude翻訳 → DB保存 |
+| `src/components/Blackboard.tsx` | SVG黒板ヘッダー |
+| `prisma/schema.prisma` | DBスキーマ |
 
-## Learn More
+## 手動で記事を生成する
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Cronエンドポイントを直接叩く
+curl -X GET http://localhost:3000/api/cron \
+  -H "Authorization: Bearer your-cron-secret"
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## デプロイ
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npx vercel --prod --scope suzunosukenagata-stars-projects
+```
 
-## Deploy on Vercel
+## 号外設定API
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+curl -X PATCH https://chibikko-shinbun.vercel.app/api/admin/breaking \
+  -H "Authorization: Bearer your-cron-secret" \
+  -H "Content-Type: application/json" \
+  -d '{"articleId": "xxx", "breaking": true}'
+```

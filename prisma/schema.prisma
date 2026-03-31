@@ -17,17 +17,41 @@ model Article {
   category    String    @default("経済")
   publishedAt DateTime  @default(now())
   createdAt   DateTime  @default(now())
+  isBreaking  Boolean   @default(false)
+  viewCount   Int       @default(0)
+  tweeted     Boolean   @default(false)
   comments    Comment[]
 
   @@index([publishedAt])
+  @@index([isBreaking])
+  @@index([viewCount])
+}
+
+model DailyTopic {
+  id        String   @id @default(cuid())
+  date      String   @unique
+  question  String
+  answer    String
+  createdAt DateTime @default(now())
 }
 
 model Comment {
-  id        String   @id @default(cuid())
+  id        String            @id @default(cuid())
   articleId String
   body      String
-  createdAt DateTime @default(now())
-  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  createdAt DateTime          @default(now())
+  article   Article           @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  reactions CommentReaction[]
 
   @@index([articleId])
+}
+
+model CommentReaction {
+  id        String   @id @default(cuid())
+  commentId String
+  type      String
+  createdAt DateTime @default(now())
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@index([commentId])
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Yomogi } from "next/font/google";
+import { Yomogi, Klee_One } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -7,6 +7,13 @@ const yomogi = Yomogi({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-yomogi",
+  display: "swap",
+});
+
+const kleeOne = Klee_One({
+  weight: "600",
+  subsets: ["latin"],
+  variable: "--font-klee",
   display: "swap",
 });
 
@@ -26,7 +33,7 @@ export default function RootLayout({
   const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_ID;
 
   return (
-    <html lang="ja" className={`h-full ${yomogi.variable}`}>
+    <html lang="ja" className={`h-full ${yomogi.variable} ${kleeOne.variable}`}>
       <head>
         <meta name="google-adsense-account" content="ca-pub-5313624085381885" />
         {adsenseId && (

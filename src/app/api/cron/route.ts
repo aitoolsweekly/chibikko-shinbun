@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { runNewsAgent } from "@/lib/agent";
+import { runNewsAgent, generateDailyTopic, tweetLatestArticles } from "@/lib/agent";
 
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");
@@ -8,5 +8,7 @@ export async function GET(request: Request) {
   }
 
   const saved = await runNewsAgent();
-  return NextResponse.json({ ok: true, saved });
+  await generateDailyTopic();
+  const tweetResult = await tweetLatestArticles();
+  return NextResponse.json({ ok: true, saved, tweet: tweetResult });
 }
