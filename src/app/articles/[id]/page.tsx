@@ -9,6 +9,10 @@ import CommentReactions from "@/components/CommentReactions";
 
 export const dynamic = "force-dynamic";
 
+function stripRuby(text: string): string {
+  return text.replace(/\{([^|{}]+)\|[^|{}]+\}/g, "$1");
+}
+
 function renderText(text: string) {
   const parts = text.split(/(\*\*[^*]+\*\*|\{[^|{}]+\|[^|{}]+\})/g);
   return parts.map((part, i) => {
@@ -259,7 +263,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
                     <div className="bg-white rounded-sm p-4 pt-5 card-pinned hover:z-10">
                       <div className="text-xs text-gray-400 font-bold mb-1">{a.category}</div>
                       <p className="font-black text-gray-800 leading-snug text-base">
-                        {CATEGORY_EMOJI[a.category] ?? "📰"} {a.titleKids}
+                        {CATEGORY_EMOJI[a.category] ?? "📰"} {stripRuby(a.titleKids)}
                       </p>
                     </div>
                   </Link>
