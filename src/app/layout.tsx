@@ -35,6 +35,7 @@ export default function RootLayout({
   return (
     <html lang="ja" className={`h-full ${yomogi.variable} ${kleeOne.variable}`}>
       <head>
+        <meta name="google-site-verification" content="u5YiTohk8kOKZhLCaLBdmVc-_ldxGdEBNQG87WUrz5o" />
         <meta name="google-adsense-account" content="ca-pub-5313624085381885" />
         {adsenseId && (
           <Script
