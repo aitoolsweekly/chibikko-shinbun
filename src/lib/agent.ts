@@ -20,7 +20,7 @@ const RSS_FEEDS = [
 async function translateToKids(title: string, body: string): Promise<{ titleKids: string; bodyKids: string }> {
   const message = await client.messages.create({
     model: "claude-sonnet-4-6",
-    max_tokens: 1024,
+    max_tokens: 2048,
     messages: [
       {
         role: "user",
@@ -32,7 +32,10 @@ async function translateToKids(title: string, body: string): Promise<{ titleKids
 - 絵文字を適度に使う
 - 比喩や例えを使ってわかりやすくする
 - タイトルは20文字以内
-- 本文は180文字以内
+- 本文は320文字以内
+- 本文には「だれが・なにを・どうした」「どんな数字か（金額・人数・割合など）」「それによってなにが変わるか」を必ず含める
+- 元の記事にある具体的な数字・人名・地名・組織名は省かずに使うこと（ただし読み方はやさしく）
+- ぼんやりとした説明（「ルールが変わった」「問題が起きた」）だけで終わらせず、具体的に何がどうなるかを書く
 - 本文中の重要な単語や数字を2〜3箇所、**単語**のようにアスタリスク2つで囲む（例：**1000億円**、**消費税**）
 - アスタリスクで囲む部分は名詞・数字など短いものだけ（文節全体は囲まない）
 - 必ず日本語のみで書くこと。韓国語（ハングル文字）・中国語簡体字は絶対に使わないこと
